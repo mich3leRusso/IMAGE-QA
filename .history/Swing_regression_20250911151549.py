@@ -1,1 +1,0 @@
-class Swing_regression(nn.Model):

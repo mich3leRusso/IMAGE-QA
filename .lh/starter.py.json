@@ -1,0 +1,278 @@
+{
+    "sourceFile": "starter.py",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 65,
+            "patches": [
+                {
+                    "date": 1757576805741,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1757576810854,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,1 +1,1 @@\n-import pytorch\n\\ No newline at end of file\n+import torch \n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757576948877,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,1 +1,2 @@\n-import torch \n\\ No newline at end of file\n+import torch \n+from \n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757576958142,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,2 +1,2 @@\n import torch \n-from \n\\ No newline at end of file\n+from transformers impor pipeline\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757576963264,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,2 +1,3 @@\n import torch \n-from transformers impor pipeline\n\\ No newline at end of file\n+from transformers import\n+pipeline\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757576970074,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,3 +1,4 @@\n import torch \n from transformers import\n-pipeline\n\\ No newline at end of file\n+\n+pipeliunepipeline\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757576975347,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,4 +1,4 @@\n import torch \n from transformers import\n \n-pipeliunepipeline\n\\ No newline at end of file\n+pipeline=pipeline\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757576987542,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,4 +1,4 @@\n import torch \n-from transformers import\n+from transformers import pipeline\n \n\\ No newline at end of file\n-pipeline=pipeline\n+pipeline=pipeline()\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757576994475,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,4 +1,6 @@\n import torch \n from transformers import pipeline\n \n-pipeline=pipeline()\n\\ No newline at end of file\n+pipeline=pipeline(\n+    task\n+)\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757577003493,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,6 @@\n+import torch \n+from transformers import pipeline\n+\n+pipeline=pipeline(\n+    task=\"image-classification\"\n+)\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757577015278,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,9 @@\n+import torch \n+from transformers import pipeline\n+\n+pipeline=pipeline(\n+    task=\"image-classification\", \n+        model=\"microsoft/swin-tiny-patch4-window7-224\",\n+    dtype=torch.float16,\n+    device=0\n+)\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757577091305,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,21 +1,9 @@\n import torch \n from transformers import pipeline\n-\n+from \n pipeline=pipeline(\n     task=\"image-classification\", \n-        model=\"microsoft/swin-tiny-patch4-window7-224\",\n+    model=\"microsoft/swin-tiny-patch4-window7-224\",\n     dtype=torch.float16,\n     device=0\n-)\n-import torch \n-from transformers import pipeline\n-\n-pipeline=pipeline(\n-    task=\"image-classification\"\n-)\n-import torch \n-from transformers import pipeline\n-\n-pipeline=pipeline(\n-    task\n )\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757577097327,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n import torch \n from transformers import pipeline\n-from \n+from transformers \n pipeline=pipeline(\n     task=\"image-classification\", \n     model=\"microsoft/swin-tiny-patch4-window7-224\",\n     dtype=torch.float16,\n"
+                },
+                {
+                    "date": 1757577103259,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n import torch \n from transformers import pipeline\n-from transformers \n+from transformers import Swin\n pipeline=pipeline(\n     task=\"image-classification\", \n     model=\"microsoft/swin-tiny-patch4-window7-224\",\n     dtype=torch.float16,\n"
+                },
+                {
+                    "date": 1757577108893,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n import torch \n from transformers import pipeline\n-from transformers import Swin\n+from transformers import SwinConfig, Swin\n pipeline=pipeline(\n     task=\"image-classification\", \n     model=\"microsoft/swin-tiny-patch4-window7-224\",\n     dtype=torch.float16,\n"
+                },
+                {
+                    "date": 1757577124109,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,9 +1,12 @@\n import torch \n from transformers import pipeline\n-from transformers import SwinConfig, Swin\n+from transformers import SwinConfig, SwinModel\n+\n pipeline=pipeline(\n     task=\"image-classification\", \n     model=\"microsoft/swin-tiny-patch4-window7-224\",\n     dtype=torch.float16,\n\\ No newline at end of file\n     device=0\n-)\n+)\n+\n+confi\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757577130925,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,12 @@\n+import torch \n+from transformers import pipeline\n+from transformers import SwinConfig, SwinModel\n+\n+pipeline=pipeline(\n+    task=\"image-classification\", \n+    model=\"microsoft/swin-tiny-patch4-window7-224\",\n+    dtype=torch.float16,\n+    device=0\n+)\n+\n+configuration\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757577137441,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -8,17 +8,5 @@\n     dtype=torch.float16,\n     device=0\n )\n \n-configuration\n-import torch \n-from transformers import pipeline\n-from transformers import SwinConfig, SwinModel\n-\n-pipeline=pipeline(\n-    task=\"image-classification\", \n-    model=\"microsoft/swin-tiny-patch4-window7-224\",\n-    dtype=torch.float16,\n-    device=0\n-)\n-\n-confi\n\\ No newline at end of file\n+configuration=Swin\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757577146739,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -8,5 +8,6 @@\n     dtype=torch.float16,\n     device=0\n )\n \n-configuration=Swin\n\\ No newline at end of file\n+configuration=SwinConfig()\n+model=\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757577152957,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -9,5 +9,5 @@\n     device=0\n )\n \n configuration=SwinConfig()\n-model=\n\\ No newline at end of file\n+model=Swin\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757577158990,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -9,5 +9,5 @@\n     device=0\n )\n \n configuration=SwinConfig()\n-model=Swin\n\\ No newline at end of file\n+model=SwinModel\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757577168525,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -8,6 +8,6 @@\n     dtype=torch.float16,\n     device=0\n )\n \n-configuration=SwinConfig()\n-model=SwinModel\n\\ No newline at end of file\n+config=SwinConfig()\n+model=SwinModel(config)\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757577369839,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -9,5 +9,16 @@\n     device=0\n )\n \n config=SwinConfig()\n-model=SwinModel(config)\n\\ No newline at end of file\n+model=SwinModel(config)\n+\n+from transformers import Swinv2Config, Swinv2Model\n+\n+# Initializing a Swinv2 microsoft/swinv2-tiny-patch4-window8-256 style configuration\n+configuration = Swinv2Config()\n+\n+# Initializing a model (with random weights) from the microsoft/swinv2-tiny-patch4-window8-256 style configuration\n+model = Swinv2Model(configuration)\n+\n+# Accessing the model configuration\n+configuration = model.config\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757577375683,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,18 +1,8 @@\n import torch \n from transformers import pipeline\n from transformers import SwinConfig, SwinModel\n \n-pipeline=pipeline(\n-    task=\"image-classification\", \n-    model=\"microsoft/swin-tiny-patch4-window7-224\",\n-    dtype=torch.float16,\n-    device=0\n-)\n-\n-config=SwinConfig()\n-model=SwinModel(config)\n-\n from transformers import Swinv2Config, Swinv2Model\n \n # Initializing a Swinv2 microsoft/swinv2-tiny-patch4-window8-256 style configuration\n configuration = Swinv2Config()\n"
+                },
+                {
+                    "date": 1757577384353,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,5 @@\n import torch \n-from transformers import pipeline\n-from transformers import SwinConfig, SwinModel\n-\n from transformers import Swinv2Config, Swinv2Model\n \n # Initializing a Swinv2 microsoft/swinv2-tiny-patch4-window8-256 style configuration\n configuration = Swinv2Config()\n"
+                },
+                {
+                    "date": 1757577825706,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -6,6 +6,4 @@\n \n # Initializing a model (with random weights) from the microsoft/swinv2-tiny-patch4-window8-256 style configuration\n model = Swinv2Model(configuration)\n \n-# Accessing the model configuration\n-configuration = model.config\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757577980644,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -6,4 +6,5 @@\n \n # Initializing a model (with random weights) from the microsoft/swinv2-tiny-patch4-window8-256 style configuration\n model = Swinv2Model(configuration)\n \n+print(model)\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757578517068,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,8 +3,6 @@\n \n # Initializing a Swinv2 microsoft/swinv2-tiny-patch4-window8-256 style configuration\n configuration = Swinv2Config()\n \n-# Initializing a model (with random weights) from the microsoft/swinv2-tiny-patch4-window8-256 style configuration\n-model = Swinv2Model(configuration)\n \n print(model)\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757578522263,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,8 @@\n import torch \n from transformers import Swinv2Config, Swinv2Model\n \n-# Initializing a Swinv2 microsoft/swinv2-tiny-patch4-window8-256 style configuration\n-configuration = Swinv2Config()\n \n+# Initializing a model (with random weights) from the microsoft/swinv2-tiny-patch4-window8-256 style configuration\n+model = Swinv2Model(configuration)\n \n print(model)\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757578548322,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,9 @@\n import torch \n from transformers import Swinv2Config, Swinv2Model\n \n+# Initializing a Swinv2 microsoft/swinv2-tiny-patch4-window8-256 style configuration\n+configuration = Swinv2Config()\n \n # Initializing a model (with random weights) from the microsoft/swinv2-tiny-patch4-window8-256 style configuration\n model = Swinv2Model(configuration)\n \n"
+                },
+                {
+                    "date": 1757578558983,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,6 +5,6 @@\n configuration = Swinv2Config()\n \n # Initializing a model (with random weights) from the microsoft/swinv2-tiny-patch4-window8-256 style configuration\n model = Swinv2Model(configuration)\n-\n+model = Swinv2Model.from_pretrained(\"microsoft/swinv2-tiny-patch4-window8-256\")\n print(model)\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757578564458,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,10 +1,6 @@\n import torch \n from transformers import Swinv2Config, Swinv2Model\n \n-# Initializing a Swinv2 microsoft/swinv2-tiny-patch4-window8-256 style configuration\n-configuration = Swinv2Config()\n \n-# Initializing a model (with random weights) from the microsoft/swinv2-tiny-patch4-window8-256 style configuration\n-model = Swinv2Model(configuration)\n model = Swinv2Model.from_pretrained(\"microsoft/swinv2-tiny-patch4-window8-256\")\n print(model)\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757579448351,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,6 +1,6 @@\n import torch \n from transformers import Swinv2Config, Swinv2Model\n \n-\n+dataset=\"\"\n model = Swinv2Model.from_pretrained(\"microsoft/swinv2-tiny-patch4-window8-256\")\n print(model)\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757579463854,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,6 +1,6 @@\n import torch \n from transformers import Swinv2Config, Swinv2Model\n \n-dataset=\"\"\n+dataset=\"/archive\"\n model = Swinv2Model.from_pretrained(\"microsoft/swinv2-tiny-patch4-window8-256\")\n print(model)\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757579521726,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,6 +1,6 @@\n import torch \n from transformers import Swinv2Config, Swinv2Model\n \n-dataset=\"/archive\"\n+dataset=\"/archive/HPCLab\"\n model = Swinv2Model.from_pretrained(\"microsoft/swinv2-tiny-patch4-window8-256\")\n print(model)\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757579529268,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,6 +1,6 @@\n import torch \n from transformers import Swinv2Config, Swinv2Model\n \n-dataset=\"/archive/HPCLab\"\n+dataset=\"/archive/HPCLab_exchange/MO\"\n model = Swinv2Model.from_pretrained(\"microsoft/swinv2-tiny-patch4-window8-256\")\n print(model)\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757579535735,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,6 +1,6 @@\n import torch \n from transformers import Swinv2Config, Swinv2Model\n \n-dataset=\"/archive/HPCLab_exchange/MO\"\n+dataset=\"/archive/HPCLab_exchange/MORTE_AL_DAVINCI/\"\n model = Swinv2Model.from_pretrained(\"microsoft/swinv2-tiny-patch4-window8-256\")\n print(model)\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757579541120,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,6 +1,6 @@\n import torch \n from transformers import Swinv2Config, Swinv2Model\n \n-dataset=\"/archive/HPCLab_exchange/MORTE_AL_DAVINCI/\"\n+dataset=\"/archive/HPCLab_exchange/MORTE_AL_DAVINCI/KADID10\"\n model = Swinv2Model.from_pretrained(\"microsoft/swinv2-tiny-patch4-window8-256\")\n print(model)\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757579599538,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,6 +1,7 @@\n import torch \n from transformers import Swinv2Config, Swinv2Model\n+dataset\n+dataset=\"/archive/HPCLab_exchange/MORTE_AL_DAVINCI/KADID10\"\n \n-dataset=\"/archive/HPCLab_exchange/MORTE_AL_DAVINCI/KADID10\"\n model = Swinv2Model.from_pretrained(\"microsoft/swinv2-tiny-patch4-window8-256\")\n print(model)\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757579606786,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n import torch \n from transformers import Swinv2Config, Swinv2Model\n-dataset\n+dataset_name=\"\"\n dataset=\"/archive/HPCLab_exchange/MORTE_AL_DAVINCI/KADID10\"\n \n model = Swinv2Model.from_pretrained(\"microsoft/swinv2-tiny-patch4-window8-256\")\n print(model)\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757579626689,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n import torch \n from transformers import Swinv2Config, Swinv2Model\n-dataset_name=\"\"\n-dataset=\"/archive/HPCLab_exchange/MORTE_AL_DAVINCI/KADID10\"\n+dataset_name=\"KADID10\"\n+dataset=F\"/archive/HPCLab_exchange/MORTE_AL_DAVINCI/KADID10\"\n \n model = Swinv2Model.from_pretrained(\"microsoft/swinv2-tiny-patch4-window8-256\")\n print(model)\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757579632060,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n import torch \n from transformers import Swinv2Config, Swinv2Model\n dataset_name=\"KADID10\"\n-dataset=F\"/archive/HPCLab_exchange/MORTE_AL_DAVINCI/KADID10\"\n+dataset=f\"/archive/HPCLab_exchange/MORTE_AL_DAVINCI/KADID10\"\n \n model = Swinv2Model.from_pretrained(\"microsoft/swinv2-tiny-patch4-window8-256\")\n print(model)\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757579639556,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n import torch \n from transformers import Swinv2Config, Swinv2Model\n dataset_name=\"KADID10\"\n-dataset=f\"/archive/HPCLab_exchange/MORTE_AL_DAVINCI/KADID10\"\n+dataset=f\"/archive/HPCLab_exchange/MORTE_AL_DAVINCI/ \"\n \n model = Swinv2Model.from_pretrained(\"microsoft/swinv2-tiny-patch4-window8-256\")\n print(model)\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757579644769,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,7 @@\n+import torch \n+from transformers import Swinv2Config, Swinv2Model\n+dataset_name=\"KADID10\"\n+dataset=f\"/archive/HPCLab_exchange/MORTE_AL_DAVINCI/{dataset_name}\"\n+\n+model = Swinv2Model.from_pretrained(\"microsoft/swinv2-tiny-patch4-window8-256\")\n+print(model)\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757579651087,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,14 +1,10 @@\n import torch \n from transformers import Swinv2Config, Swinv2Model\n+\n dataset_name=\"KADID10\"\n dataset=f\"/archive/HPCLab_exchange/MORTE_AL_DAVINCI/{dataset_name}\"\n \n-model = Swinv2Model.from_pretrained(\"microsoft/swinv2-tiny-patch4-window8-256\")\n-print(model)\n-import torch \n-from transformers import Swinv2Config, Swinv2Model\n-dataset_name=\"KADID10\"\n-dataset=f\"/archive/HPCLab_exchange/MORTE_AL_DAVINCI/ \"\n \n+\n model = Swinv2Model.from_pretrained(\"microsoft/swinv2-tiny-patch4-window8-256\")\n print(model)\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757579659835,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,9 +1,9 @@\n import torch \n from transformers import Swinv2Config, Swinv2Model\n \n dataset_name=\"KADID10\"\n-dataset=f\"/archive/HPCLab_exchange/MORTE_AL_DAVINCI/{dataset_name}\"\n+dataset_path=f\"/archive/HPCLab_exchange/MORTE_AL_DAVINCI/{dataset_name}\"\n \n \n \n model = Swinv2Model.from_pretrained(\"microsoft/swinv2-tiny-patch4-window8-256\")\n"
+                },
+                {
+                    "date": 1757579665652,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,8 +3,8 @@\n \n dataset_name=\"KADID10\"\n dataset_path=f\"/archive/HPCLab_exchange/MORTE_AL_DAVINCI/{dataset_name}\"\n \n+#import the model \n \n-\n model = Swinv2Model.from_pretrained(\"microsoft/swinv2-tiny-patch4-window8-256\")\n print(model)\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757579676954,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -6,5 +6,8 @@\n \n #import the model \n \n model = Swinv2Model.from_pretrained(\"microsoft/swinv2-tiny-patch4-window8-256\")\n-print(model)\n\\ No newline at end of file\n+#visualize the model\n+\n+print(model)\n+\n"
+                },
+                {
+                    "date": 1757579685635,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -10,4 +10,5 @@\n #visualize the model\n \n print(model)\n \n+if data\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757579692521,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -10,5 +10,5 @@\n #visualize the model\n \n print(model)\n \n-if data\n\\ No newline at end of file\n+if dataset_name\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757579704473,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -10,5 +10,5 @@\n #visualize the model\n \n print(model)\n \n-if dataset_name\n\\ No newline at end of file\n+if dataset_name== \"KADID10\"\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757579713290,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -10,5 +10,7 @@\n #visualize the model\n \n print(model)\n \n-if dataset_name== \"KADID10\"\n\\ No newline at end of file\n+if dataset_name== \"KADID10\":\n+else:\n+       \n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757579728792,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,16 @@\n+import torch \n+from transformers import Swinv2Config, Swinv2Model\n+\n+dataset_name=\"KADID10\"\n+dataset_path=f\"/archive/HPCLab_exchange/MORTE_AL_DAVINCI/{dataset_name}\"\n+\n+#import the model \n+\n+model = Swinv2Model.from_pretrained(\"microsoft/swinv2-tiny-patch4-window8-256\")\n+#visualize the model\n+\n+print(model)\n+\n+if dataset_name== \"KADID10\":\n+else:\n+    print(\"no other dataset ate the moment\")   \n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757579734826,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -12,21 +12,5 @@\n print(model)\n \n if dataset_name== \"KADID10\":\n else:\n-    print(\"no other dataset ate the moment\")   \n-import torch \n-from transformers import Swinv2Config, Swinv2Model\n-\n-dataset_name=\"KADID10\"\n-dataset_path=f\"/archive/HPCLab_exchange/MORTE_AL_DAVINCI/{dataset_name}\"\n-\n-#import the model \n-\n-model = Swinv2Model.from_pretrained(\"microsoft/swinv2-tiny-patch4-window8-256\")\n-#visualize the model\n-\n-print(model)\n-\n-if dataset_name== \"KADID10\":\n-else:\n-       \n\\ No newline at end of file\n+    print(\"no other dataset at the moment\")   \n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757579745535,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,6 +11,9 @@\n \n print(model)\n \n if dataset_name== \"KADID10\":\n+    #open the dataset\n+    \n+\n else:\n     print(\"no other dataset at the moment\")   \n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757579751422,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,19 @@\n+import torch \n+from transformers import Swinv2Config, Swinv2Model\n+\n+dataset_name=\"KADID10\"\n+dataset_path=f\"/archive/HPCLab_exchange/MORTE_AL_DAVINCI/{dataset_name}\"\n+\n+#import the model \n+\n+model = Swinv2Model.from_pretrained(\"microsoft/swinv2-tiny-patch4-window8-256\")\n+#visualize the model\n+\n+print(model)\n+\n+if dataset_name== \"KADID10\":\n+    #open the dataset\n+    with un\n+\n+else:\n+    print(\"no other dataset at the moment\")   \n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757579777888,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,19 @@\n+import torch \n+from transformers import Swinv2Config, Swinv2Model\n+import zop\n+dataset_name=\"KADID10\"\n+dataset_path=f\"/archive/HPCLab_exchange/MORTE_AL_DAVINCI/{dataset_name}\"\n+\n+#import the model \n+\n+model = Swinv2Model.from_pretrained(\"microsoft/swinv2-tiny-patch4-window8-256\")\n+#visualize the model\n+\n+print(model)\n+\n+if dataset_name== \"KADID10\":\n+    #open the dataset\n+    with unzip\n+\n+else:\n+    print(\"no other dataset at the moment\")   \n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757579865055,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n import torch \n from transformers import Swinv2Config, Swinv2Model\n-import zop\n+from zip \n dataset_name=\"KADID10\"\n dataset_path=f\"/archive/HPCLab_exchange/MORTE_AL_DAVINCI/{dataset_name}\"\n \n #import the model \n@@ -15,43 +15,5 @@\n     #open the dataset\n     with unzip\n \n else:\n-    print(\"no other dataset at the moment\")   \n-import torch \n-from transformers import Swinv2Config, Swinv2Model\n-\n-dataset_name=\"KADID10\"\n-dataset_path=f\"/archive/HPCLab_exchange/MORTE_AL_DAVINCI/{dataset_name}\"\n-\n-#import the model \n-\n-model = Swinv2Model.from_pretrained(\"microsoft/swinv2-tiny-patch4-window8-256\")\n-#visualize the model\n-\n-print(model)\n-\n-if dataset_name== \"KADID10\":\n-    #open the dataset\n-    with un\n-\n-else:\n-    print(\"no other dataset at the moment\")   \n-import torch \n-from transformers import Swinv2Config, Swinv2Model\n-\n-dataset_name=\"KADID10\"\n-dataset_path=f\"/archive/HPCLab_exchange/MORTE_AL_DAVINCI/{dataset_name}\"\n-\n-#import the model \n-\n-model = Swinv2Model.from_pretrained(\"microsoft/swinv2-tiny-patch4-window8-256\")\n-#visualize the model\n-\n-print(model)\n-\n-if dataset_name== \"KADID10\":\n-    #open the dataset\n-    \n-\n-else:\n     print(\"no other dataset at the moment\")   \n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757579872373,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n import torch \n from transformers import Swinv2Config, Swinv2Model\n-from zip \n+from zipfile import Zip\n dataset_name=\"KADID10\"\n dataset_path=f\"/archive/HPCLab_exchange/MORTE_AL_DAVINCI/{dataset_name}\"\n \n #import the model \n"
+                },
+                {
+                    "date": 1757580058238,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,20 @@\n+import torch \n+from transformers import Swinv2Config, Swinv2Model\n+from zipfile import Zipfile\n+\n+dataset_name=\"KADID10\"\n+dataset_path=f\"/archive/HPCLab_exchange/MORTE_AL_DAVINCI/{dataset_name}\"\n+\n+#import the model \n+\n+model = Swinv2Model.from_pretrained(\"microsoft/swinv2-tiny-patch4-window8-256\")\n+#visualize the model\n+\n+print(model)\n+\n+if dataset_name== \"KADID10\":\n+    #open the dataset\n+    with Zip\n+\n+else:\n+    print(\"no other dataset at the moment\")   \n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757580065724,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -13,27 +13,8 @@\n print(model)\n \n if dataset_name== \"KADID10\":\n     #open the dataset\n-    with Zip\n+    with Zipfile(data)\n \n else:\n-    print(\"no other dataset at the moment\")   \n-import torch \n-from transformers import Swinv2Config, Swinv2Model\n-from zipfile import Zip\n-dataset_name=\"KADID10\"\n-dataset_path=f\"/archive/HPCLab_exchange/MORTE_AL_DAVINCI/{dataset_name}\"\n-\n-#import the model \n-\n-model = Swinv2Model.from_pretrained(\"microsoft/swinv2-tiny-patch4-window8-256\")\n-#visualize the model\n-\n-print(model)\n-\n-if dataset_name== \"KADID10\":\n-    #open the dataset\n-    with unzip\n-\n-else:\n     print(\"no other dataset at the moment\")   \n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757580070951,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -13,8 +13,8 @@\n print(model)\n \n if dataset_name== \"KADID10\":\n     #open the dataset\n-    with Zipfile(data)\n+    with Zipfile(dataset_path, \"\")\n \n else:\n     print(\"no other dataset at the moment\")   \n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757580080258,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,20 @@\n+import torch \n+from transformers import Swinv2Config, Swinv2Model\n+from zipfile import Zipfile\n+\n+dataset_name=\"KADID10\"\n+dataset_path=f\"/archive/HPCLab_exchange/MORTE_AL_DAVINCI/{dataset_name}\"\n+\n+#import the model \n+\n+model = Swinv2Model.from_pretrained(\"microsoft/swinv2-tiny-patch4-window8-256\")\n+#visualize the model\n+\n+print(model)\n+\n+if dataset_name== \"KADID10\":\n+    #open the dataset\n+    with Zipfile(dataset_path, \"r\") as :\n+\n+else:\n+    print(\"no other dataset at the moment\")   \n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757580585993,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,9 +2,9 @@\n from transformers import Swinv2Config, Swinv2Model\n from zipfile import Zipfile\n \n dataset_name=\"KADID10\"\n-dataset_path=f\"/archive/HPCLab_exchange/MORTE_AL_DAVINCI/{dataset_name}\"\n+dataset_path=f\"/archive/HPCLab_exchange/MORTE_AL_DAVINCI/KADID10{dataset_name}\"\n \n #import the model \n \n model = Swinv2Model.from_pretrained(\"microsoft/swinv2-tiny-patch4-window8-256\")\n@@ -13,28 +13,9 @@\n print(model)\n \n if dataset_name== \"KADID10\":\n     #open the dataset\n-    with Zipfile(dataset_path, \"r\") as :\n+    with Zipfile(dataset_path, \"r\") as zip:\n \n-else:\n-    print(\"no other dataset at the moment\")   \n-import torch \n-from transformers import Swinv2Config, Swinv2Model\n-from zipfile import Zipfile\n \n-dataset_name=\"KADID10\"\n-dataset_path=f\"/archive/HPCLab_exchange/MORTE_AL_DAVINCI/{dataset_name}\"\n-\n-#import the model \n-\n-model = Swinv2Model.from_pretrained(\"microsoft/swinv2-tiny-patch4-window8-256\")\n-#visualize the model\n-\n-print(model)\n-\n-if dataset_name== \"KADID10\":\n-    #open the dataset\n-    with Zipfile(dataset_path, \"\")\n-\n else:\n     print(\"no other dataset at the moment\")   \n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1757580594048,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,9 +1,9 @@\n import torch \n from transformers import Swinv2Config, Swinv2Model\n from zipfile import Zipfile\n \n-dataset_name=\"KADID10\"\n+dataset_name=\"kadid\"\n dataset_path=f\"/archive/HPCLab_exchange/MORTE_AL_DAVINCI/KADID10/{dataset_name}\"\n \n #import the model \n \n"
+                },
+                {
+                    "date": 1757580648876,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,21 @@\n+import torch \n+from transformers import Swinv2Config, Swinv2Model\n+from zipfile import Zipfile\n+impo\n+dataset_name=\"kadid10k\"\n+dataset_path=f\"/archive/HPCLab_exchange/MORTE_AL_DAVINCI/KADID10/{dataset_name}\"\n+\n+#import the model \n+\n+model = Swinv2Model.from_pretrained(\"microsoft/swinv2-tiny-patch4-window8-256\")\n+#visualize the model\n+\n+print(model)\n+\n+if dataset_name== \"kadid10k\":\n+    #open the dataset\n+    os\n+\n+\n+else:\n+    print(\"no other dataset at the moment\")   \n\\ No newline at end of file\n"
+                }
+            ],
+            "date": 1757576805741,
+            "name": "Commit-0",
+            "content": "import pytorch"
+        }
+    ]
+}

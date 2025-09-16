@@ -1,2 +1,6 @@
 .history/
 .lh/
+runs/
+*.png
+*.gv
+__pycache__/

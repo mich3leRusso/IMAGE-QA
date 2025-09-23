@@ -1,6 +1,8 @@
 .history/
 .lh/
 runs/
+training_plots/
 *.png
 *.gv
 __pycache__/
+*.sh

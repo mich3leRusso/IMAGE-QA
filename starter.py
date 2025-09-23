@@ -1,94 +1,28 @@
 import torch 
-from transformers import Swinv2Config, Swinv2Model, AutoImageProcessor
-import os
-import pandas as pd 
-from PIL import Image
+from transformers import  AutoImageProcessor
 from Swing_regression import *
 from CustomImageDataset import *
-from torch.utils.data import DataLoader
-from torch.optim import  Adam
-from datetime import datetime
-from torch.utils.tensorboard import SummaryWriter
-from torchview import draw_graph
-import matplotlib.pyplot as plt
-from torch.optim.lr_scheduler import MultiStepLR
-import scipy.io 
-from parser import get_parser
 
-dataset_name="LIVE"
-dataset_path=f"/archive/HPCLab_exchange/MORTE_AL_DAVINCI/databaserelease2"
-# dataset_path=f"/archive/HPCLab_exchange/MORTE_AL_DAVINCI/KADID10/{dataset_name}"
+from torch.utils.data import DataLoader, Subset
+from torch.optim.lr_scheduler import MultiStepLR
+
+import os
+from parser import get_parser
+from sklearn.model_selection import KFold
+from train import train, evaluate, training_configuration
+import numpy as np  
+
+from ray import tune
+from ray.tune import CLIReporter
+from ray.tune.schedulers import ASHAScheduler
+from load_dataset import load_dataset
+
+dataset_name="KADID10K"
+dataset_path=f"/archive/HPCLab_exchange/MORTE_AL_DAVINCI/{dataset_name}"
+
 image_processor = AutoImageProcessor.from_pretrained("microsoft/swinv2-tiny-patch4-window8-256")
 
-
-labels=[] 
-images_path=""
-img_noise=[]
-
-if dataset_name== "kadid10k":
-    #open the dataset
-    files=os.listdir(dataset_path)
-    
-   # label_file=""
-    
-    for file in files:
-
-        if file.endswith(".csv"):
-            
-            labels_dataset=pd.read_csv(f"{dataset_path}/{file}")   
-            img_noise=labels_dataset["dist_img"].values.tolist()
-            labels=labels_dataset["dmos"].values.tolist()
-        
-        else:
-            images_path=f"{dataset_path}/{file}"
-
-    
-
-elif dataset_name=="LIVE":
-
-    images_path=dataset_path
-    files=os.listdir(dataset_path)
-
-    mat=scipy.io.loadmat(f"{dataset_path}/refnames_all.mat")
-    
-    for file in files:
-        
-        if file.endswith(".mat") or file.endswith(".txt"):
-            continue
-        
-        else:
-            path=os.path.join(dataset_path,file)
-            images=os.listdir(path)
-            
-            if "info.txt" in images:
-
-                with open(path+"/info.txt","r") as ref:
-                    for line in ref.readlines():
-                        
-                        if line.split():
-                            labels.append(float(line.split()[2]))
-                            img_noise.append(f"{file}/{line.split()[1]}") 
-
-            else:
-                continue
-
-
-else:
-    print("no other dataset at the moment")   
-
-#create a dataloader 
-
-dataset=CustomImageDataset(images_path, img_noise,labels)
- 
-
-#Create dataloader
-
-dataloader=DataLoader(dataset, batch_size=16, shuffle=True)
-
-# for X, y in dataloader:
-#     print(X.shape)
-#     print(y )
-#     input()
+train_set, val_set, test_set=load_dataset(dataset_name, dataset_path)
 
 #create the network
 model=Swin_regression()
@@ -97,62 +31,108 @@ if torch.cuda.is_available():
  
     model=model.to("cuda")
 
-#import optimizer 
-optimizer= Adam(model.parameters(), lr=0.01, weight_decay=0.01)
-scheduler =MultiStepLR(optimizer, milestones=[1.0 , 0.7, 0.6] , gamma=0.25, last_epoch=-1)
-# define loss function
 
+#create a onfiguration file
+config={
+    "batch_size": tune.choice([4, 8, 16, 32, 64] ) , 
+    "lr": tune.loguniform(1e-4, 1e-6), 
+    "dataset_name" : dataset_name, 
+    "dataset_path": dataset_path
+}
+
+
+scheduler = ASHAScheduler(
+        metric="loss",
+        mode="min",
+        max_t=10,
+        grace_period=1,
+        reduction_factor=2
+    )
+
+reporter = CLIReporter(
+        parameter_columns=["lr", "batch_size"],
+        metric_columns=["loss", "spearman_corr", "pearson_corr"]
+)
+
+result = tune.run(
+        training_configuration,
+        config=config,
+        scheduler=scheduler,
+        progress_reporter=reporter, 
+        num_samples=20, 
+        resources_per_trial={"cpu": 2, "gpu": 1}
+)
+
+#Create dataloader
+test_loader=DataLoader(test_set, batch_size=len(test_set),shuffle=False)
+
+best_trial = result.get_best_trial("loss", "min", "last")
+print("Best trial config: {}".format(best_trial.config))
+print("Best trial final loss: {}".format(best_trial.last_result["loss"]))
+
+
+#import optimizer 
+# scheduler =MultiStepLR(optimizer, milestones=[200, 100, 60, 20, 1.0 , 0.7, 0.6] , gamma=0.1, last_epoch=-1)
+
+input("finished job")
+# define loss function
 loss_fn=torch.nn.MSELoss()
 
 #DEFINE THE TRAINING ROUTINE
-epochs=30
-
-timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-tb_writer = SummaryWriter('runs/fashion_trainer_{}'.format(timestamp))
-
-last_loss=0.0
-epoch_losses=[] 
+epochs=5
 
 # kfold cross validation
 model.train()
 
-for epoch in range(epochs):
+###make this a function
+batch_sizes=[4, 8, 16, 32, 64]
+splits=KFold(n_splits=5,  shuffle=True, random_state=42)
+metrics=[] 
 
-    running_loss=0.0
-    epoch_loss=0.
-    print("*"*15, f"start epoch: {epoch}", "*"*15)
-
+#Perform Kfold Cross Validation
+ 
+for bs in batch_sizes:
+    pearson_corr_avg=0.0
+    spearman_corr_avg=0.0
     
-    for i, (X, y) in enumerate(dataloader):
-        
-    
-        optimizer.zero_grad()
-        
-        X=image_processor(X, return_tensors="pt").pixel_values
+    print("*"*20, f"batch parameter {bs} ", "*"*20)
+    for i , (train_index, val_index) in enumerate(splits.split(train_set)):
 
-        X=X.to("cuda")
-        
-        output=model(X)
+        D_train=DataLoader(Subset(train_set, train_index),batch_size=bs, shuffle=True)
+        D_val=DataLoader(Subset(train_set,val_index ), shuffle=True)
 
-        loss=loss_fn(output.squeeze(1),y.to("cuda", dtype=torch.float32))
-        loss.backward()
-        
-        optimizer.step()
+        model_trained=train(model, epochs, loss_fn, D_train,image_processor,  dataset_name,verbose=True)
 
-        # Gather data and report
-        running_loss += loss.item()
-        epoch_loss +=loss.item()
+        #eval the model 
+        model_trained.eval()
+        with torch.no_grad():
+           pearson_corr, spearman_corr =evaluate(model_trained, D_val, image_processor)
 
-        if i % 30 == 0 and i!=0:
-            last_loss = running_loss / 30 # loss per batch
-            print('  batch {} loss: {}'.format(i + 1, last_loss))
-            tb_x = epoch * len(dataloader) + i + 1
-            tb_writer.add_scalar('Loss/train', last_loss, tb_x)
-            running_loss = 0.
+        pearson_corr_avg+=pearson_corr
+        spearman_corr_avg+=spearman_corr
 
-    scheduler.step()
-    epoch_losses.append(epoch_loss/len(dataloader))
+    pearson_corr_avg/=5
+    spearman_corr_avg/=5
 
-plt.plot(epoch_losses)
-plt.show()
+    metrics.append((pearson_corr_avg, spearman_corr_avg))
+
+pearsons = [p for p, _ in metrics]
+idx = np.argmax(pearsons)
+
+best_pearson, best_spearman = metrics[idx]
+print(f"Index: {idx}, Pearson: {best_pearson}, Spearman: {best_spearman}")
+
+
+
+#save the model
+os.mkdir("trained_networks/")
+
+torch.save(model.state_dict, "trained_networks/ViT.pt")
+
+#test the model
+model.eval()
+
+with torch.no_grad():
+    evaluate(model, test_loader, image_processor)
+
 

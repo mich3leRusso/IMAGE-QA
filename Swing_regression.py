@@ -25,6 +25,8 @@ class Swin_regression(nn.Module):
         self.reg_head = nn.Sequential(
             nn.Linear(hidden_size, hidden_size),
             nn.ReLU(),
+            nn.Linear(hidden_size, hidden_size),
+            nn.ReLU(),
             nn.Linear(hidden_size, 1)
         )
 

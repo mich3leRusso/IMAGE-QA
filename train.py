@@ -1,0 +1,180 @@
+import torch 
+from scipy.stats import spearmanr, pearsonr
+from torch.utils.tensorboard import SummaryWriter
+import copy 
+from torch.optim import AdamW
+from Swing_regression import Swin_regression
+from torch.utils.data import DataLoader
+from ray import tune
+from transformers import  AutoImageProcessor
+from load_dataset import load_dataset
+
+def train(model_s, epochs, loss_fn, train_loader, image_processor, dataset_name,  verbose=False):
+    
+    batch_size=list(train_loader)[0][0].shape[0]   
+    
+    device="cpu"
+    if torch.cuda.is_available():
+        device="cuda" 
+
+    model=copy.deepcopy(model_s)
+    model=model.to(device)
+   
+    tb_writer = SummaryWriter(f"runs/SWIN_train_{dataset_name}_{batch_size}")
+    
+    optimizer= AdamW(model.parameters(), lr=0.0001, weight_decay=0.01)
+
+    model.train()
+    for epoch in range(epochs):
+
+        running_loss=0.0
+        epoch_loss=0.
+
+        print("*"*15, f"start epoch: {epoch}", "*"*15)
+
+        
+        for i, (X, y) in enumerate(train_loader):
+            
+        
+            optimizer.zero_grad()
+            
+            X=image_processor(X, return_tensors="pt").pixel_values
+
+            X=X.to(device)
+            
+            output=model(X)
+
+            loss=loss_fn(output.squeeze(1),y.to(device, dtype=torch.float32))
+            loss.backward()
+            
+            optimizer.step()
+
+            # Gather data and report
+            running_loss += loss.item()
+            epoch_loss +=loss.item()
+
+            if i % 16== 0 and i!=0:
+                last_loss = running_loss / 16 # loss per batch
+                if verbose:
+                    print('  batch {} loss: {}'.format(i + 1, last_loss))
+                tb_x = (epoch+1)*(i+1)
+                tb_writer.add_scalar('Loss/train', last_loss, tb_x)
+                running_loss = 0.
+
+        
+
+    tb_writer.flush()
+    tb_writer.close()
+    return model
+
+def evaluate(model, loader, image_processor):
+    model.eval()
+    preds, targets_all = [], []
+    device="cpu"
+
+    if torch.cuda.is_available():
+        device="cuda"
+
+    loss_fn=torch.nn.MSELoss()
+    loss=0.0
+
+    model=model.to(device)
+    with torch.no_grad():
+        for inputs, targets in loader:
+            
+            inputs=image_processor(inputs, return_tensors="pt").pixel_values
+
+            inputs=inputs.to(device)
+            targets.to("cpu", dtype=torch.float32)
+            outputs = model(inputs).squeeze(1)
+
+            loss+=loss_fn(outputs, targets.to(device, dtype=torch.float32))
+            preds.append(outputs)
+            targets_all.append(targets)
+            
+    loss/=len(loader)
+
+    preds = torch.cat(preds).cpu().numpy()
+    targets_all = torch.cat(targets_all).cpu().numpy()
+    
+    # Pearson and Spearman correlations
+    pearson_corr, _ = pearsonr(preds, targets_all)
+    spearman_corr, _ = spearmanr(preds, targets_all)
+
+    return pearson_corr, spearman_corr, loss
+
+def training_configuration(config):
+
+    if torch.cuda.is_available():
+        device="cuda"
+    else:
+        device="cpu"
+
+    model=Swin_regression().to(device)
+
+    optimizer=AdamW(model.parameters(), lr=config["lr"],weight_decay=0.01)
+
+
+    train_dataset, val_dataset, test_dataset = load_dataset(config["dataset_name"], config["dataset_path"] )
+
+    train_loader=DataLoader(train_dataset, batch_size=config["batch_size"], shuffle=True )
+    
+    loss_fn=torch.nn.MSELoss()
+
+    epochs=1
+
+   
+    image_processor = AutoImageProcessor.from_pretrained("microsoft/swinv2-tiny-patch4-window8-256")
+
+    tb_writer = SummaryWriter(f"runs/SWIN_train_{config["dataset_name"]}_{config["batch_size"]}")
+    
+
+    for epoch in range(epochs):
+
+        running_loss=0.0
+        epoch_loss=0.
+
+        print("*"*15, f"start epoch: {epoch}", "*"*15)
+
+        model.train()
+        for i, (X, y) in enumerate(train_loader):
+            
+        
+            optimizer.zero_grad()
+            
+            X=image_processor(X, return_tensors="pt").pixel_values
+
+            X=X.to(device)
+            
+            output=model(X)
+
+            loss=loss_fn(output.squeeze(1),y.to(device, dtype=torch.float32))
+            loss.backward()
+            
+            optimizer.step()
+
+            # Gather data and report
+            running_loss += loss.item()
+            epoch_loss +=loss.item()
+            
+            if i % 16== 0 and i!=0:
+                last_loss = running_loss / 16 # loss per batch
+                tb_x = (epoch+1)*(i+1)
+                print('  batch {} loss: {}'.format(i + 1, last_loss))
+                tb_writer.add_scalar('Loss/train', last_loss, tb_x)
+                running_loss = 0.
+
+   #evaliate the model 
+    model.eval() 
+        
+    with torch.no_grad():
+        pearson_corr, spearman_corr, val_loss =evaluate(model, val_dataset, image_processor)
+        tune.report(pearson_corr=pearson_corr)
+        tune.report(spearman_corr=spearman_corr)
+        tune.report(loss=val_loss)
+
+    tb_writer.flush()
+    tb_writer.close()
+
+    return 
+

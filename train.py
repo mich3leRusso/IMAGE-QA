@@ -9,6 +9,7 @@ from ray import tune
 from transformers import  AutoImageProcessor
 from load_dataset import load_dataset
 import os
+from ray import tune
 def train(model_s, epochs, loss_fn, train_loader, image_processor, dataset_name,  verbose=False):
     
     batch_size=list(train_loader)[0][0].shape[0]   
@@ -85,12 +86,12 @@ def evaluate(model, loader, image_processor):
             inputs=image_processor(inputs, return_tensors="pt").pixel_values
 
             inputs=inputs.to(device)
-            targets.to("cpu", dtype=torch.float32)
             outputs = model(inputs).squeeze(1)
-
-            loss+=loss_fn(outputs, targets.to(device, dtype=torch.float32))
+            targets = torch.tensor([targets], dtype=outputs.dtype, device=outputs.device)
+            loss+=loss_fn(outputs, targets)
             preds.append(outputs)
             targets_all.append(targets)
+
             
     loss/=len(loader)
 
@@ -121,28 +122,32 @@ def training_configuration(config):
     
     loss_fn=torch.nn.MSELoss()
 
-
     if config["verbose"]:
-        os.makedirs("logs/")
-        with open(f"logs/SWIN_train_{config["dataset_name"]}_{config["batch_size"]}_{config["lr"]}.txt","w" ) as logs_file:
+        os.makedirs("/davinci-1/home/micherusso/PycharmProjects/IMAGE-QA/logs/", exist_ok=True)
+        with open(f"/davinci-1/home/micherusso/PycharmProjects/IMAGE-QA/logs/SWIN_train_{config["dataset_name"]}_{config["batch_size"]}_{config["lr"]}.txt","w" ) as logs_file:
                 logs_file.write(f"Configuration parameters Dataset_Name: {config["dataset_name"]},  Bath_Size: {config["batch_size"]} Learning Rate: {config["lr"]}")
 
 
     epochs=1
 
    
-    image_processor = AutoImageProcessor.from_pretrained("microsoft/swinv2-tiny-patch4-window8-256")
+    image_processor = AutoImageProcessor.from_pretrained("microsoft/swinv2-tiny-patch4-window8-256", use_fast=True)
+    
     os.makedirs(f"runs/SWIN_train_{config["dataset_name"]}_{config["batch_size"]}_{config["lr"]}",exist_ok=True )
-    tb_writer = SummaryWriter(f"runs/SWIN_train_{config["dataset_name"]}_{config["batch_size"]}_{config["lr"]}")
+    tb_writer = SummaryWriter(f"/davinci-1/home/micherusso/PycharmProjects/IMAGE-QA/runs/SWIN_train_{config["dataset_name"]}_{config["batch_size"]}_{config["lr"]}")
     
     model.train()
     for epoch in range(epochs):
 
         running_loss=0.0
         epoch_loss=0.
-
-        print("*"*15, f"start epoch: {epoch}", "*"*15)
-
+        
+        if config["verbose"]:
+            with open(f"/davinci-1/home/micherusso/PycharmProjects/IMAGE-QA/logs/SWIN_train_{config['dataset_name']}_{config['batch_size']}_{config['lr']}.txt", "a") as logs_file:
+                
+                msg = f"{'*'*15} start epoch: {epoch} {'*'*15}\n"
+                logs_file.write(msg)   
+                
        
         for i, (X, y) in enumerate(train_loader):
             
@@ -167,9 +172,10 @@ def training_configuration(config):
             if i % 16== 0 and i!=0:
                 last_loss = running_loss / 16 # loss per batch
                 tb_x = (epoch+1)*(i+1)
+
                 if config["verbose"]:
-                    with open(f"logs/SWIN_train_{config['dataset_name']}_{config['batch_size']}_{config['lr']}.txt", "a") as logs_file:
-                        logs_file.write('  batch {} loss: {}'.format(i + 1, last_loss))
+                    with open(f"/davinci-1/home/micherusso/PycharmProjects/IMAGE-QA/logs/SWIN_train_{config['dataset_name']}_{config['batch_size']}_{config['lr']}.txt", "a") as logs_file:
+                        logs_file.write('batch {} loss: {}'.format(i + 1, last_loss))
 
                 tb_writer.add_scalar('Loss/train', last_loss, tb_x)
                 running_loss = 0.
@@ -182,9 +188,16 @@ def training_configuration(config):
         
     with torch.no_grad():
         pearson_corr, spearman_corr, val_loss =evaluate(model, val_dataset, image_processor)
-        tune.report(pearson_corr=pearson_corr)
-        tune.report(spearman_corr=spearman_corr)
-        tune.report(loss=val_loss)
+
+        tune.report( 
+            
+            metrics={
+            "loss": val_loss.item(),
+            "spearman_corr": spearman_corr,
+            "pearson_corr": pearson_corr
+
+            }
+        )
 
 
     return 

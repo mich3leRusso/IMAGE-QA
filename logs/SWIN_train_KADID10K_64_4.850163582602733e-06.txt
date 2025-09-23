@@ -1,0 +1,2 @@
+Configuration parameters Dataset_Name: KADID10K,  Bath_Size: 64 Learning Rate: 4.850163582602733e-06*************** start epoch: 0 ***************
+batch 17 loss: 10.67035710811615batch 33 loss: 9.783655941486359batch 49 loss: 9.177561104297638batch 65 loss: 9.084882616996765batch 81 loss: 9.021065354347229batch 97 loss: 8.435402870178223

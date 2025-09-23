@@ -8,7 +8,7 @@ from torch.utils.data import DataLoader
 from ray import tune
 from transformers import  AutoImageProcessor
 from load_dataset import load_dataset
-
+import os
 def train(model_s, epochs, loss_fn, train_loader, image_processor, dataset_name,  verbose=False):
     
     batch_size=list(train_loader)[0][0].shape[0]   
@@ -121,14 +121,21 @@ def training_configuration(config):
     
     loss_fn=torch.nn.MSELoss()
 
+
+    if config["verbose"]:
+        os.makedirs("logs/")
+        with open(f"logs/SWIN_train_{config["dataset_name"]}_{config["batch_size"]}_{config["lr"]}.txt","w" ) as logs_file:
+                logs_file.write(f"Configuration parameters Dataset_Name: {config["dataset_name"]},  Bath_Size: {config["batch_size"]} Learning Rate: {config["lr"]}")
+
+
     epochs=1
 
    
     image_processor = AutoImageProcessor.from_pretrained("microsoft/swinv2-tiny-patch4-window8-256")
-
-    tb_writer = SummaryWriter(f"runs/SWIN_train_{config["dataset_name"]}_{config["batch_size"]}")
+    os.makedirs(f"runs/SWIN_train_{config["dataset_name"]}_{config["batch_size"]}_{config["lr"]}",exist_ok=True )
+    tb_writer = SummaryWriter(f"runs/SWIN_train_{config["dataset_name"]}_{config["batch_size"]}_{config["lr"]}")
     
-
+    model.train()
     for epoch in range(epochs):
 
         running_loss=0.0
@@ -136,7 +143,7 @@ def training_configuration(config):
 
         print("*"*15, f"start epoch: {epoch}", "*"*15)
 
-        model.train()
+       
         for i, (X, y) in enumerate(train_loader):
             
         
@@ -160,11 +167,17 @@ def training_configuration(config):
             if i % 16== 0 and i!=0:
                 last_loss = running_loss / 16 # loss per batch
                 tb_x = (epoch+1)*(i+1)
-                print('  batch {} loss: {}'.format(i + 1, last_loss))
+                if config["verbose"]:
+                    with open(f"logs/SWIN_train_{config['dataset_name']}_{config['batch_size']}_{config['lr']}.txt", "a") as logs_file:
+                        logs_file.write('  batch {} loss: {}'.format(i + 1, last_loss))
+
                 tb_writer.add_scalar('Loss/train', last_loss, tb_x)
                 running_loss = 0.
 
-   #evaliate the model 
+   #evaluate the model 
+    tb_writer.flush()
+    tb_writer.close()
+
     model.eval() 
         
     with torch.no_grad():
@@ -173,8 +186,6 @@ def training_configuration(config):
         tune.report(spearman_corr=spearman_corr)
         tune.report(loss=val_loss)
 
-    tb_writer.flush()
-    tb_writer.close()
 
     return 
 

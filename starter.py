@@ -37,7 +37,8 @@ config={
     "batch_size": tune.choice([4, 8, 16, 32, 64] ) , 
     "lr": tune.loguniform(1e-4, 1e-6), 
     "dataset_name" : dataset_name, 
-    "dataset_path": dataset_path
+    "dataset_path": dataset_path, 
+    "verbose": True, 
 }
 
 
@@ -60,7 +61,8 @@ result = tune.run(
         scheduler=scheduler,
         progress_reporter=reporter, 
         num_samples=20, 
-        resources_per_trial={"cpu": 2, "gpu": 1}
+        resources_per_trial={"cpu": 2, "gpu": 1}, 
+        verbose=0
 )
 
 #Create dataloader

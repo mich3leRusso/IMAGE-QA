@@ -1,6 +1,7 @@
 .history/
 .lh/
 runs/
+logs/
 training_plots/
 *.png
 *.gv

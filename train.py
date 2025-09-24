@@ -11,30 +11,32 @@ from load_dataset import load_dataset
 import os
 from ray import tune
 
-def train(model_s, epochs, loss_fn, train_loader, image_processor, dataset_name,  verbose=False):
+def train(model, epochs,  train_loader, dataset_name, batch_size, lr=0.0001,  verbose=False):
     
-    batch_size=list(train_loader)[0][0].shape[0]   
-    
+ 
     device="cpu"
     if torch.cuda.is_available():
         device="cuda" 
 
-    model=copy.deepcopy(model_s)
     model=model.to(device)
-   
-    tb_writer = SummaryWriter(f"runs/SWIN_train_{dataset_name}_{batch_size}")
-    
-    optimizer= AdamW(model.parameters(), lr=0.0001, weight_decay=0.01)
 
+    loss_fn=torch.nn.MSELoss()    
+    optimizer= AdamW(model.parameters(), lr=lr, weight_decay=0.01)
+
+    image_processor = AutoImageProcessor.from_pretrained("microsoft/swinv2-tiny-patch4-window8-256", use_fast=True)
+    
+    tb_writer = SummaryWriter(f"runs/SWIN_train_{dataset_name}_{batch_size}")
+    iteration_number=0
+    
     model.train()
+
     for epoch in range(epochs):
 
         running_loss=0.0
         epoch_loss=0.
 
         print("*"*15, f"start epoch: {epoch}", "*"*15)
-
-        
+         
         for i, (X, y) in enumerate(train_loader):
             
         
@@ -59,14 +61,16 @@ def train(model_s, epochs, loss_fn, train_loader, image_processor, dataset_name,
                 last_loss = running_loss / 16 # loss per batch
                 if verbose:
                     print('  batch {} loss: {}'.format(i + 1, last_loss))
-                tb_x = (epoch+1)*(i+1)
+                tb_x = iteration_number
                 tb_writer.add_scalar('Loss/train', last_loss, tb_x)
                 running_loss = 0.
-
         
-
+        iteration_number+=1
+        
+    #save tensor table 
     tb_writer.flush()
     tb_writer.close()
+
     return model
 
 def evaluate(model, loader, image_processor):

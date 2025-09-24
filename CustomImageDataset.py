@@ -4,6 +4,7 @@ from torch.utils.data import Dataset
 from PIL import Image
 from torchvision.transforms.functional import pil_to_tensor
 from torchvision import transforms
+
 class CustomImageDataset(Dataset):
     def __init__(self,image_path,image_name ,labels):
         super().__init__()
@@ -34,4 +35,15 @@ class CustomImageDataset(Dataset):
         label=self.labels[index] 
     
         return image, label
+    
+def add_datasets(dataset1, dataset2):
+    image_names=dataset1.image_names + dataset2.image_names
+    labels=dataset1.labels + dataset2.labels
+
+    if dataset1.root_folder!=dataset2.root_folder:
+        print("Operation not done, different root folders")
+        return 
+    
+    return CustomImageDataset(dataset1.root_folder, image_names, labels)
+
 

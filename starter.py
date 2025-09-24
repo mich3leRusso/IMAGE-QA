@@ -69,14 +69,19 @@ result = tune.run(
 test_loader=DataLoader(test_set, batch_size=len(test_set),shuffle=False)
 
 best_trial = result.get_best_trial("loss", "min", "last")
+best_trial_spear=result.get_best_trial("spearman_corr", "max","last")
+best_trial_pearson=result.get_best_trial("pearson_corr", "max","last")
+
 print("Best trial config: {}".format(best_trial.config))
+print("Best trial config: {}".format(best_trial_spear.config))
+print("Best trial config: {}".format(best_trial_pearson.config))
 print("Best trial final loss: {}".format(best_trial.last_result["loss"]))
 
 
 #import optimizer 
 # scheduler =MultiStepLR(optimizer, milestones=[200, 100, 60, 20, 1.0 , 0.7, 0.6] , gamma=0.1, last_epoch=-1)
 
-input("finished job")
+
 
 if False:
     # define loss function
@@ -110,7 +115,7 @@ if False:
             #eval the model 
             model_trained.eval()
             with torch.no_grad():
-            pearson_corr, spearman_corr =evaluate(model_trained, D_val, image_processor)
+                pearson_corr, spearman_corr =evaluate(model_trained, D_val, image_processor)
 
             pearson_corr_avg+=pearson_corr
             spearman_corr_avg+=spearman_corr

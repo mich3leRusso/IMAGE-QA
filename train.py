@@ -10,6 +10,7 @@ from transformers import  AutoImageProcessor
 from load_dataset import load_dataset
 import os
 from ray import tune
+
 def train(model_s, epochs, loss_fn, train_loader, image_processor, dataset_name,  verbose=False):
     
     batch_size=list(train_loader)[0][0].shape[0]   
@@ -128,7 +129,7 @@ def training_configuration(config):
                 logs_file.write(f"Configuration parameters Dataset_Name: {config["dataset_name"]},  Bath_Size: {config["batch_size"]} Learning Rate: {config["lr"]}")
 
 
-    epochs=1
+    epochs=5
 
    
     image_processor = AutoImageProcessor.from_pretrained("microsoft/swinv2-tiny-patch4-window8-256", use_fast=True)
@@ -137,6 +138,7 @@ def training_configuration(config):
     tb_writer = SummaryWriter(f"/davinci-1/home/micherusso/PycharmProjects/IMAGE-QA/runs/SWIN_train_{config["dataset_name"]}_{config["batch_size"]}_{config["lr"]}")
     
     model.train()
+    iteration_number=0
     for epoch in range(epochs):
 
         running_loss=0.0
@@ -171,7 +173,7 @@ def training_configuration(config):
             
             if i % 16== 0 and i!=0:
                 last_loss = running_loss / 16 # loss per batch
-                tb_x = (epoch+1)*(i+1)
+                tb_x = iteration_number
 
                 if config["verbose"]:
                     with open(f"/davinci-1/home/micherusso/PycharmProjects/IMAGE-QA/logs/SWIN_train_{config['dataset_name']}_{config['batch_size']}_{config['lr']}.txt", "a") as logs_file:
@@ -179,7 +181,7 @@ def training_configuration(config):
 
                 tb_writer.add_scalar('Loss/train', last_loss, tb_x)
                 running_loss = 0.
-
+            iteration_number+=1
    #evaluate the model 
     tb_writer.flush()
     tb_writer.close()
@@ -190,7 +192,7 @@ def training_configuration(config):
         pearson_corr, spearman_corr, val_loss =evaluate(model, val_dataset, image_processor)
 
         tune.report( 
-            
+
             metrics={
             "loss": val_loss.item(),
             "spearman_corr": spearman_corr,

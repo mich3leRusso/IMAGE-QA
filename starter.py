@@ -75,7 +75,8 @@ def main(args):
 
     #create the network
     model=Swin_regression()
-
+    if args.load_model:
+        model.load_state_dict(torch.load("model.pth"))
     #Create dataloader
     train_set, val_set, test_set=load_dataset(dataset_name, dataset_path)
     train_set= add_datasets(train_set, val_set)
@@ -95,7 +96,7 @@ def main(args):
 
     if args.save_model:
         torch.save(model.state_dict(),"model_weight.pth")
-    
+
     if False:
         # define loss function
         loss_fn=torch.nn.MSELoss()
